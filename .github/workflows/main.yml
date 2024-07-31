@@ -1,4 +1,4 @@
-name: CI
+name: .NET MAUI CI
 
 on:
   push:
@@ -10,22 +10,71 @@ on:
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Setup .NET Core
+    - name: Setup .NET
       uses: actions/setup-dotnet@v2
       with:
-        dotnet-version: '6.0.x'
+        dotnet-version: '7.0.x'
 
     - name: Install dependencies
       run: dotnet restore
 
-    - name: Build the solution
-      run: dotnet build --no-restore
+    - name: Build the project
+      run: dotnet build --configuration Release
 
     - name: Run tests
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test --configuration Release
+
+  android:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: '7.0.x'
+
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v2
+      with:
+        api-level: 30
+        ndk-version: 21.4.7075529
+
+    - name: Install dependencies
+      run: dotnet restore
+
+    - name: Build the Android project
+      run: dotnet build --configuration Release -f net7.0-android
+
+    - name: Run Android tests
+      run: dotnet test --configuration Release -f net7.0-android
+
+  ios:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Install dependencies
+      run: dotnet restore
+
+    - name: Build the iOS project
+      run: dotnet build --configuration Release -f net7.0-ios
+
+    - name: Run iOS tests
+      run: dotnet test --configuration Release -f net7.0-ios
