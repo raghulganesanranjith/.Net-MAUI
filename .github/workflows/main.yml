@@ -27,7 +27,7 @@ jobs:
       run: dotnet restore ../MauiApp1/MauiApp1.sln
 
     - name: Build the project
-      run: dotnet build --configuration Release ../MauiApp1/MauiApp1.sln
+      run: dotnet build --configuration Release ./MauiApp1/MauiApp1.sln
 
     - name: Run tests
       run: dotnet test --configuration Release ../MauiApp1/MauiApp1.sln
